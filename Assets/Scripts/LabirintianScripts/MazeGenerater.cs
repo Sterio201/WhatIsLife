@@ -78,6 +78,12 @@ public class MazeGenerater
         return maze;
     }
 
+    // Для построения лабиринта из окружностей
+    /*public List<MazeGeneratorCell> GeneratorMazeTeta()
+    {
+
+    }*/ 
+
     void RemoveWallsWithBacktracker(MazeGeneratorCell[,] cells)
     {
         MazeGeneratorCell current = cells[0, 0];
@@ -102,7 +108,7 @@ public class MazeGenerater
             {
                 MazeGeneratorCell chosen = unvisitedCells[Random.Range(0, unvisitedCells.Count)];
 
-                RemoveWall(current, chosen);
+                RemoveWallRectangular(current, chosen);
 
                 chosen.visited = true;
                 stack.Push(chosen);
@@ -187,9 +193,20 @@ public class MazeGenerater
             }
 
         } while (stack.Count > 0);
+
+        for(int y = 1; y<cells.Length; y++)
+        {
+            for(int x = 1; x<cells[y].Length; x++)
+            {
+                    if (cells[y][x].WallBottom == true && cells[y-1][x].WallRight == true && cells[y-1][x + 1].WallLeft == true)
+                    {
+                        cells[y][x].WallBottom = false;
+                    }
+            }
+        }
     }
 
-    void RemoveWall(MazeGeneratorCell a, MazeGeneratorCell b)
+    void RemoveWallRectangular(MazeGeneratorCell a, MazeGeneratorCell b)
     {
         if (a.X == b.X)
         {

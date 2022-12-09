@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Mycom.Target.Unity.Ads;
 using System;
 
@@ -8,6 +9,9 @@ public class MyTargetManager : MonoBehaviour
 {
     [SerializeField] uint ANDROID_SLOT_ID;
     private InterstitialAd _interstitialAd;
+    [SerializeField] Text text;
+
+    int count;
 
     private void Start()
     {
@@ -15,12 +19,16 @@ public class MyTargetManager : MonoBehaviour
 
         if (PlayerPrefs.HasKey("target"))
         {
-            CounterMyTarget.count = PlayerPrefs.GetInt("target");
+            count = PlayerPrefs.GetInt("target");
         }
         else
         {
-            CounterMyTarget.count = 0;
+            count = 0;
         }
+
+        StartCoroutine(Show());
+
+        //text.text = count.ToString();
     }
 
     InterstitialAd CreateInterstitial()
@@ -47,12 +55,16 @@ public class MyTargetManager : MonoBehaviour
         _interstitialAd.Load();
     }
 
-    public void Show()
+    IEnumerator Show()
     {
-        if(CounterMyTarget.count >= 2)
+        yield return new WaitForSeconds(1.2f);
+
+        if(count >= 2)
         {
+            //text.text = count.ToString() + " R";
             _interstitialAd.Show();
-            CounterMyTarget.count = 0;
+            count = 0;
+            PlayerPrefs.SetInt("target", count);
         }
     }
 }

@@ -207,8 +207,16 @@ public class EventsLabirintian : MonoBehaviour
 
         director.Play();
 
-        CounterMyTarget.count++;
-        PlayerPrefs.SetInt("target", CounterMyTarget.count);
+        if (PlayerPrefs.HasKey("target"))
+        {
+            int currentCount = PlayerPrefs.GetInt("target");
+            currentCount++;
+            PlayerPrefs.SetInt("target", currentCount);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("target", 1);
+        }
 
         yield return new WaitForSeconds(15f);
 
