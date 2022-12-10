@@ -69,6 +69,7 @@ public class SpawnerTriangle : MonoBehaviour
 
         posFinal = generaterCell.posFinal;
         EventsLabirintian.posFinal = posFinal;
+        //Debug.Log(posFinal);
     }
 
     public void ClearningMaze()

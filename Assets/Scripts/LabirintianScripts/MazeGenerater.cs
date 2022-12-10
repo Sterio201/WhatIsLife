@@ -320,5 +320,9 @@ public class MazeGenerater
         else if (furthest.Y == 0) furthest.WallBottom = false;
         else if (furthest.X + furthest.Y + 1 == cells.Length) furthest.WallRight = false;
         else if (furthest.Y == cells.Length - 1) furthest.WallLeft = false;
+
+        //Debug.Log((furthest.X*1.5f + 0.75f * furthest.Y) + " " + furthest.Y * 1.5f);
+
+        posFinal = new Vector2((furthest.X * 1.5f + 0.75f * furthest.Y) + 1f, (furthest.Y * 1.5f) + 0.5f);
     }
 }

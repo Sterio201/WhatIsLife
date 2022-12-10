@@ -61,6 +61,7 @@ public class MyTargetManager : MonoBehaviour
 
         if(count >= 2)
         {
+            //Debug.Log("show");
             //text.text = count.ToString() + " R";
             _interstitialAd.Show();
             count = 0;
