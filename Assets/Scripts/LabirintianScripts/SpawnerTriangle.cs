@@ -18,6 +18,9 @@ public class SpawnerTriangle : MonoBehaviour
     [HideInInspector]
     public Cell[][] cells;
 
+    [HideInInspector]
+    public MazeScoreGenerate scoreGenerate;
+
     private void Start()
     {
         cells = new Cell[height][];
@@ -32,12 +35,12 @@ public class SpawnerTriangle : MonoBehaviour
 
             for(int x = 0; x<cells[y].Length; x++)
             {
-                Cell c = Instantiate(cellPrefab, new Vector3((x * CellSize.x) + temp, y * CellSize.y, y * CellSize.z), Quaternion.identity);
+                Cell c = Instantiate(cellPrefab, new Vector3((x * CellSize.x) + temp, (y * (CellSize.y - 0.3f)), y * CellSize.z), Quaternion.identity);
                 c.transform.parent = labirintPos;
                 cells[y][x] = c;
             }
 
-            temp += 0.75f;
+            temp += 1f;
         }
 
         GenerateCells();
@@ -69,7 +72,8 @@ public class SpawnerTriangle : MonoBehaviour
 
         posFinal = generaterCell.posFinal;
         EventsLabirintian.posFinal = posFinal;
-        //Debug.Log(posFinal);
+
+        scoreGenerate.GenerateScore(maze);
     }
 
     public void ClearningMaze()

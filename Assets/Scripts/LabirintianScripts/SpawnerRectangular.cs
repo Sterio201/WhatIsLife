@@ -20,6 +20,9 @@ public class SpawnerRectangular : MonoBehaviour
     [HideInInspector]
     public Cell[,] cells;
 
+    [HideInInspector]
+    public MazeScoreGenerate scoreGenerate;
+
     private void Start()
     {
         cells = new Cell[width, height];
@@ -84,6 +87,8 @@ public class SpawnerRectangular : MonoBehaviour
 
         posFinal = generaterCell.posFinal;
         EventsLabirintian.posFinal = posFinal;
+
+        scoreGenerate.GenerateScore(maze);
     }
 
     public void ClearingLabirintian()

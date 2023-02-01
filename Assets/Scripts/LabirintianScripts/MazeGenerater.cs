@@ -323,6 +323,6 @@ public class MazeGenerater
 
         //Debug.Log((furthest.X*1.5f + 0.75f * furthest.Y) + " " + furthest.Y * 1.5f);
 
-        posFinal = new Vector2((furthest.X * 1.5f + 0.75f * furthest.Y) + 1f, (furthest.Y * 1.5f) + 0.5f);
+        posFinal = new Vector2((furthest.X * 2f + 1f * furthest.Y) + 1f, (furthest.Y * 1.7f) + 1f);
     }
 }
