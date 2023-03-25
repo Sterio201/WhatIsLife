@@ -14,13 +14,12 @@ public class CloseStartText : MonoBehaviour
 
     private void Start()
     {
-        //PlayerPrefs.DeleteAll();
-        if(PlayerPrefs.HasKey("FirstPlay"))
+        if (eventsLabirintian.typePlay == TypePlay.Arcade)
         {
             startText.text = "И снова новая жизнь...";
             time = 2f;
         }
-        else
+        else if (eventsLabirintian.typePlay == TypePlay.Story)
         {
             startText.text = "Представь же,  друг мой, что жизнь это некий большой лабиринт. Кто-то бесконечно бродит по его коридорам в поисках пути к заветной мечте, что представляет из себя непосредственно выход из лабиринта. Находятся и те, кто выход находят.Но почему же тогда таковыми не могут быть все? Потому что вечно бродить по лабиринту не дано никому...";
             PlayerPrefs.SetString("FirstPlay", "play");

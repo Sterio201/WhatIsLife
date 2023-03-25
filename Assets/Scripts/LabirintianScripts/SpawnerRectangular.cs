@@ -11,8 +11,9 @@ public class SpawnerRectangular : MonoBehaviour
     [SerializeField] int width;
     [SerializeField] int height;
 
-    [SerializeField] Transform labirintPos;
-    [SerializeField] Transform PlayerTransform;
+    [SerializeField] GameObject pointerExit;
+
+    public Transform labirintPos;
 
     [HideInInspector]
     public Vector2 posFinal;
@@ -38,34 +39,23 @@ public class SpawnerRectangular : MonoBehaviour
         }
 
         GenerateCells();
+    }
 
+    private void OnEnable()
+    {
         AllIvents.generateMaze.AddListener(GenerateCells);
         AllIvents.clearMaze.AddListener(ClearingLabirintian);
         AllIvents.shiftPositionPlayer.AddListener(RandomPosPlayer);
         AllIvents.shiftColorMaze.AddListener(ShiftColorMaze);
     }
 
-    /*private void Awake()
+    private void OnDisable()
     {
-        cells = new Cell[width, height];
-
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                Cell c = Instantiate(cellPrefab, new Vector3(x * CellSize.x, y * CellSize.y, y * CellSize.z), Quaternion.identity);
-                c.transform.parent = labirintPos;
-                cells[x, y] = c;
-            }
-        }
-
-        GenerateCells();
-
-        TestAllIvents.generateMaze.AddListener(GenerateCells);
-        TestAllIvents.clearMaze.AddListener(ClearingLabirintian);
-        TestAllIvents.shiftPositionPlayer.AddListener(RandomPosPlayer);
-        TestAllIvents.shiftColorMaze.AddListener(ShiftColorMaze);
-    }*/
+        AllIvents.generateMaze.RemoveListener(GenerateCells);
+        AllIvents.clearMaze.RemoveListener(ClearingLabirintian);
+        AllIvents.shiftPositionPlayer.RemoveListener(RandomPosPlayer);
+        AllIvents.shiftColorMaze.RemoveListener(ShiftColorMaze);
+    }
 
     public void GenerateCells()
     {
@@ -89,6 +79,14 @@ public class SpawnerRectangular : MonoBehaviour
         EventsLabirintian.posFinal = posFinal;
 
         scoreGenerate.GenerateScore(maze);
+    }
+
+    public void FirstPointer()
+    {
+        pointerExit.transform.position = posFinal;
+        pointerExit.GetComponent<pointerExit>().player = GameObject.FindGameObjectWithTag("Player").transform;
+        AllIvents.pointerExit = Instantiate(pointerExit);
+        AllIvents.pointerExit.SetActive(true);
     }
 
     public void ClearingLabirintian()

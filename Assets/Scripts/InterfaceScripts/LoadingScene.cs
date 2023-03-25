@@ -8,31 +8,31 @@ public class LoadingScene : MonoBehaviour
 {
     [SerializeField] GameObject panelLoad;
     [SerializeField] Image imageLoad;
-    [SerializeField] int nomerScene;
 
     AsyncOperation asyncOperation;
     bool readyLoad;
 
-    public void Shift()
+    public void Shift(int id)
     {
+        gameObject.SetActive(true);
         readyLoad = false;
 
         if(panelLoad != null)
         {
-            StartCoroutine(StartAnimLoad());
+            StartCoroutine(StartAnimLoad(id));
         }
         else
         {
-            SceneManager.LoadScene(nomerScene);
+            SceneManager.LoadScene(id);
         }
     }
 
-    IEnumerator StartAnimLoad()
+    IEnumerator StartAnimLoad(int id_scene)
     {
         panelLoad.SetActive(true);
         yield return new WaitForSeconds(1f);
 
-        asyncOperation = SceneManager.LoadSceneAsync(nomerScene);
+        asyncOperation = SceneManager.LoadSceneAsync(id_scene);
         asyncOperation.allowSceneActivation = true;
 
         readyLoad = true;

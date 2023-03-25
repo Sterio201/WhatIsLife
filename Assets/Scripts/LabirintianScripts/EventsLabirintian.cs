@@ -16,7 +16,10 @@ public class EventsLabirintian : MonoBehaviour
     [SerializeField] Text eventText;
     [SerializeField] Animator darkAnim;
     [SerializeField] PlayableDirector director;
+    public TypePlay typePlay;
 
+    Vector2 startPlayerPos;
+    MazeManager mazeManager;
     float currentTimeEvent;
 
     [HideInInspector]
@@ -26,17 +29,29 @@ public class EventsLabirintian : MonoBehaviour
 
     int IDevent;
     int countIvent;
+    int age;
 
     [HideInInspector]
     public bool ready;
-    
 
     private void Start()
     {
+        mazeManager = GetComponent<MazeManager>();
+
+        startPlayerPos = playerPos.position;
+
         currentTimeEvent = timerEvent;
         currentTimeLife = timerLife;
 
         countIvent = 0;
+        age = 0;
+
+        if(typePlay == TypePlay.Story)
+        {
+            textEvents[0] = "Порой жизнь подбрасывает нам нужный путь...";
+        }
+
+        textEvents.Add("Настало время повзрослеть");
 
         ready = false;
     }
@@ -52,14 +67,12 @@ public class EventsLabirintian : MonoBehaviour
             }
             else
             {
-                if(countIvent >= 2)
+                if(countIvent >= 2 || typePlay == TypePlay.Arcade)
                 {
                     IDevent = IDrandomevent(chance);
                     StartCoroutine(ActivateEvent(IDevent));
-
-                    eventText.gameObject.GetComponent<Animator>().Play("ShowEventTitle");
                 }
-                else
+                else if(typePlay == TypePlay.Story)
                 {
                         if (countIvent == 0)
                         {
@@ -71,7 +84,6 @@ public class EventsLabirintian : MonoBehaviour
                         }
 
                         countIvent++;
-
                         eventText.gameObject.GetComponent<Animator>().Play("ShowEventTitle");
                 }
 
@@ -85,11 +97,11 @@ public class EventsLabirintian : MonoBehaviour
     {
         if (ready)
         {
-            if(currentTimeLife <= 0 || Vector3.Distance(playerPos.position, posFinal) <= 0.7f)
+            if((currentTimeLife <= 0 && typePlay == TypePlay.Arcade) || Vector3.Distance(playerPos.position, posFinal) <= 0.7f)
             {
                 StartCoroutine(Ending());
             }
-            else
+            else if(typePlay == TypePlay.Arcade)
             {
                 currentTimeLife -= Time.deltaTime;
             }
@@ -148,8 +160,16 @@ public class EventsLabirintian : MonoBehaviour
     // Активация события
     IEnumerator ActivateEvent(int id)
     {
-        eventText.text = textEvents[id];
-        
+        if(id >= 4)
+        {
+            eventText.text = textEvents[textEvents.Count - 1];
+        }
+        else
+        {
+            eventText.text = textEvents[id];
+        }
+        eventText.gameObject.GetComponent<Animator>().Play("ShowEventTitle");
+
         yield return new WaitForSeconds(5f);
         if (ready)
         {
@@ -160,25 +180,34 @@ public class EventsLabirintian : MonoBehaviour
             switch (id)
             {
                 case 0:
-                    //spawner.GenerateCells();
-                    AllIvents.generateMaze.Invoke();
+                    if (typePlay == TypePlay.Story)
+                    {
+                        AllIvents.pointerExitShow.Invoke();
+                    }
+                    else
+                    {
+                        AllIvents.generateMaze.Invoke();
+                    }
                     break;
 
                 case 1:
-                    //spawner.ClearingLabirintian();
                     AllIvents.clearMaze.Invoke();
                     yield return new WaitForSeconds(4.5f);
-                    //spawner.GenerateCells();
                     AllIvents.generateMaze.Invoke();
                     break;
 
                 case 2:
-                    //Vector2 newPos = spawner.RandomPos();
-                    //playerPos.position = new Vector3(newPos.x, newPos.y);
                     AllIvents.shiftPositionPlayer.Invoke(playerPos);
                     break;
 
                 case 3:
+                    AllIvents.pointerExitShow.Invoke();
+                    break;
+
+                case 4:
+                    playerPos.position = startPlayerPos;
+                    mazeManager.GrowingUp();
+                    age++;
                     break;
 
                 default:
@@ -196,30 +225,41 @@ public class EventsLabirintian : MonoBehaviour
     {
         ready = false;
         // Активация катсцены
-        if (Vector3.Distance(playerPos.position, posFinal) <= 0.7f)
+
+        if(typePlay == TypePlay.Arcade || age > 0)
         {
-            eventText.text = "И вот ты достиг своей мечты, но что теперь... Тебе больше некуда идти и не к чему стремиться...";
+            if (Vector3.Distance(playerPos.position, posFinal) <= 0.7f)
+            {
+                eventText.text = "И вот ты достиг своей мечты, но что теперь... Тебе больше некуда идти и не к чему стремиться...";
+            }
+            else
+            {
+                eventText.text = "Что же, в погоне за мечтой ты и не заметил, как твое время истекло...";
+            }
+
+            director.Play();
+
+            if (PlayerPrefs.HasKey("target"))
+            {
+                int currentCount = PlayerPrefs.GetInt("target");
+                currentCount++;
+                PlayerPrefs.SetInt("target", currentCount);
+            }
+            else
+            {
+                PlayerPrefs.SetInt("target", 1);
+            }
+
+            yield return new WaitForSeconds(15f);
+
+            mainMenu.isReady = true;
         }
         else
         {
-            eventText.text = "Что же, в погоне за мечтой ты и не заметил, как твое время истекло...";
+            ready = true;
+            StartCoroutine(ActivateEvent(4));
         }
-
-        director.Play();
-
-        if (PlayerPrefs.HasKey("target"))
-        {
-            int currentCount = PlayerPrefs.GetInt("target");
-            currentCount++;
-            PlayerPrefs.SetInt("target", currentCount);
-        }
-        else
-        {
-            PlayerPrefs.SetInt("target", 1);
-        }
-
-        yield return new WaitForSeconds(15f);
-
-        mainMenu.isReady = true;
     }
 }
+
+public enum TypePlay { Arcade, Story }

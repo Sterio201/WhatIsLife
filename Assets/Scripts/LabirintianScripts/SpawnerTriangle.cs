@@ -10,7 +10,7 @@ public class SpawnerTriangle : MonoBehaviour
 
     [SerializeField] int height;
 
-    [SerializeField] Transform labirintPos;
+    public Transform labirintPos;
 
     [HideInInspector]
     public Vector2 posFinal;
@@ -44,11 +44,27 @@ public class SpawnerTriangle : MonoBehaviour
         }
 
         GenerateCells();
+    }
 
+    private void OnEnable()
+    {
         AllIvents.generateMaze.AddListener(GenerateCells);
         AllIvents.clearMaze.AddListener(ClearningMaze);
         AllIvents.shiftPositionPlayer.AddListener(RandomPosPlayer);
         AllIvents.shiftColorMaze.AddListener(ShiftColorMaze);
+    }
+
+    private void OnDisable()
+    {
+        AllIvents.generateMaze.RemoveListener(GenerateCells);
+        AllIvents.clearMaze.RemoveListener(ClearningMaze);
+        AllIvents.shiftPositionPlayer.RemoveListener(RandomPosPlayer);
+        AllIvents.shiftColorMaze.RemoveListener(ShiftColorMaze);
+    }
+
+    public void ShiftPointer()
+    {
+        AllIvents.pointerExit.transform.position = posFinal;
     }
 
     public void GenerateCells()

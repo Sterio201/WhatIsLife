@@ -21,25 +21,7 @@ public class GrowingUp : MonoBehaviour
     private void Start()
     {
         timeRepaiting = true;
-
-        //leftWalls = new List<SpriteRenderer>();
-        //bottomWalls = new List<SpriteRenderer>();
-
-        /*for(int i = 0; i<spawner.cells.GetLength(0); i++)
-        {
-            for(int j = 0; j<spawner.cells.GetLength(1); j++)
-            {
-                SpriteRenderer left = spawner.cells[i, j].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
-                SpriteRenderer bottom = spawner.cells[i, j].transform.GetChild(1).gameObject.GetComponent<SpriteRenderer>();
-
-                left.color = startColor;
-                bottom.color = startColor;
-
-                leftWalls.Add(left);
-                bottomWalls.Add(bottom);
-            }
-        }*/
-
+        
         trail = player.transform.GetChild(0).gameObject.GetComponent<TrailRenderer>();
         render = player.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
 
@@ -58,14 +40,6 @@ public class GrowingUp : MonoBehaviour
                     musicPlayer.clip = audioClips[1];
                     musicPlayer.Play();
                 }
-
-                //Repaiting(leftWalls);
-                //Repaiting(bottomWalls);
-
-                /*if(leftWalls[0].color == shiftColor)
-                {
-                    timeRepaiting = false;
-                }*/
 
                 if(render.color == shiftColor)
                 {
@@ -100,11 +74,6 @@ public class GrowingUp : MonoBehaviour
 
     void Repaiting()
     {
-        /*for(int i = 0; i<walls.Count; i++)
-        {
-            walls[i].color = Color.Lerp(walls[i].color, shiftColor, Mathf.Abs(Mathf.Sin(Time.deltaTime)));
-        }*/
-
         AllIvents.shiftColorMaze.Invoke(shiftColor);
 
         trail.startColor = Color.Lerp(trail.startColor, shiftColor, Mathf.Abs(Mathf.Sin(Time.deltaTime)));

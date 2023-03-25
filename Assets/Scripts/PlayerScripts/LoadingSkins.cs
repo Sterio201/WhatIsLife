@@ -17,5 +17,10 @@ public class LoadingSkins : MonoBehaviour
         {
             GetComponent<SpriteRenderer>().sprite = skins[0].sprite;
         }
+
+        if(gameObject.name == "BodyTest")
+        {
+            GetComponent<SpriteRenderer>().size = new Vector2(1, 1);
+        }
     }
 }

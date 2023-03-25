@@ -7,9 +7,6 @@ public class MazeScoreGenerate : MonoBehaviour
     [SerializeField] GameObject scorePrefab;
     Stack<GameObject> scorePool;
 
-    [HideInInspector]
-    public TypeMaze typeMaze;
-
     public void GenerateScore(MazeGeneratorCell[,] cells)
     {
         if(scorePool == null)
@@ -96,5 +93,3 @@ public class MazeScoreGenerate : MonoBehaviour
         }
     }
 }
-
-public enum TypeMaze {Rectangular, Triangle }
